@@ -1,5 +1,3 @@
-import com.typesafe.sbt.SbtSite.SiteKeys._
-
 lazy val commonSettings = Seq(
   scalaVersion := "2.11.5",
   crossScalaVersions := Seq("2.11.5"),
