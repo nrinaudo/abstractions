@@ -41,3 +41,5 @@ lazy val laws = project.dependsOn(core)
   ))
 
 lazy val std = project.dependsOn(core, laws % "test").settings(commonSettings: _*)
+
+lazy val examples = project.dependsOn(core, std).settings(commonSettings: _*)

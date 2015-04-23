@@ -9,6 +9,11 @@ package object abstractions {
 
   type Id[A] = A
 
+  implicit val idMonad: Monad[Id] = new Monad[Id] {
+    override def flatMap[A, B](a: Id[A])(f: A => Id[B]) = f(a)
+    override def pure[A](a: A) = a
+  }
+
   /** Declares implicit operators for all type classes. */
   object ops extends Functor.ToFunctorOps         with
                      Eq.ToEqOps                   with

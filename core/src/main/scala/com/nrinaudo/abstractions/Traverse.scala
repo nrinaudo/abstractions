@@ -15,7 +15,7 @@ import simulacrum.typeclass
   // - Functor implementation -----------------------------------------------------------------------------------------
   // -------------------------------------------------------------------------------------------------------------------
   override def map[A,B](fa: F[A])(f: A => B): F[B] =
-    traverse[Id, A, B](fa)(f)(Monad.idMonad)
+    traverse[Id, A, B](fa)(f)
 
 
 
