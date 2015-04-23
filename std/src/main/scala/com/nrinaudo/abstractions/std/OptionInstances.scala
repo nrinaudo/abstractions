@@ -2,6 +2,7 @@ package com.nrinaudo.abstractions.std
 
 import com.nrinaudo.abstractions._
 import com.nrinaudo.abstractions.ops._
+import simulacrum.op
 
 trait OptionInstances {
   implicit def optionEq[A: Eq]: Eq[Option[A]] = Eq { (oa, ob) =>
@@ -35,7 +36,7 @@ trait OptionInstances {
   }
 
 
-  implicit val optionInstances = new Applicative[Option] with Foldable[Option] {
+  implicit val optionInstances = new Monad[Option] with Foldable[Option] {
     // - Functor methods -----------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     override def map[A, B](oa: Option[A])(f: A => B): Option[B] = oa match {
@@ -62,6 +63,14 @@ trait OptionInstances {
     override def ap[A, B](oa: Option[A])(of: Option[A => B]): Option[B] = (oa, of) match {
       case (Some(a), Some(f)) => Some(f(a))
       case _                  => None
+    }
+
+
+    // - Monad methods -------------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+    override def flatMap[A, B](fa: Option[A])(f: (A) => Option[B]): Option[B] = fa match {
+      case Some(a) => f(a)
+      case None    => None
     }
   }
 }
