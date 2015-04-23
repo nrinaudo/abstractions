@@ -7,7 +7,7 @@ import simulacrum.typeclass
 }
 
 object Monad {
-  def idMonad[X]: Monad[Id] = new Monad[Id] {
+  def idMonad: Monad[Id] = new Monad[Id] {
     override def flatMap[A, B](a: Id[A])(f: A => Id[B]) = f(a)
     override def pure[A](a: A) = a
   }

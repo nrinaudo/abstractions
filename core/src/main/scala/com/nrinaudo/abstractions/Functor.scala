@@ -28,5 +28,4 @@ object Functor {
   def idFunctor[X]: Functor[Id] = new Functor[Id] {
     override def map[A, B](fa: Id[A])(f: (A) => B): Id[B] = f(fa)
   }
-
 }
