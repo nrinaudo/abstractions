@@ -2,7 +2,6 @@ package com.nrinaudo.abstractions.std
 
 import com.nrinaudo.abstractions._
 import com.nrinaudo.abstractions.ops._
-import simulacrum.op
 
 trait OptionInstances {
   implicit def optionEq[A: Eq]: Eq[Option[A]] = Eq { (oa, ob) =>
@@ -73,4 +72,22 @@ trait OptionInstances {
       case None    => None
     }
   }
+
+  implicit def optionTFunctor[F[_]: Functor]: Functor[OptionT[F, ?]] = new Functor[OptionT[F, ?]] {
+    override def map[A, B](fa: OptionT[F, A])(f: A => B): OptionT[F, B] = fa map f
+  }
+
+  implicit def optionTMonad[F[_]: Monad]: Monad[OptionT[F, ?]] = new Monad[OptionT[F, ?]] {
+    override def pure[A](a: A): OptionT[F, A] = OptionT(Monad[F].pure(Some(a)))
+    override def flatMap[A, B](fa: OptionT[F, A])(f: A => OptionT[F, B]): OptionT[F, B] = fa flatMap f
+  }
+}
+
+case class OptionT[F[_], A](run: F[Option[A]]) {
+  def map[B](f: A => B)(implicit F: Functor[F]): OptionT[F, B] = OptionT(run.map(_.map(f)))
+  def flatMap[B](f: A => OptionT[F, B])(implicit F: Monad[F]): OptionT[F, B] =
+    OptionT(run.flatMap {
+      case Some(a) => f(a).run
+      case None => F.pure(None)
+    })
 }

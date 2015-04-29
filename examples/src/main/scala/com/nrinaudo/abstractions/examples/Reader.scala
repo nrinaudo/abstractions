@@ -7,9 +7,10 @@ import com.nrinaudo.abstractions.common.{ReaderT, Reader}
 import com.nrinaudo.abstractions._
 import com.nrinaudo.abstractions.std.all._
 
-case class User(name: String, home: File)
-
 object ReaderExamples extends App {
+  case class User(name: String, home: File)
+
+
   // - Simple example --------------------------------------------------------------------------------------------------
   // -------------------------------------------------------------------------------------------------------------------
   def userName: Reader[Properties, String] = Reader(_.getProperty("user.name"))

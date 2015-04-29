@@ -19,6 +19,17 @@ case class Right[B](value: B) extends Or[Nothing, B] {
   override def flatMap[AA >: Nothing, C](f: B => Or[AA, C]): Or[AA, C] = f(value)
 }
 
+object Or {
+  def apply[A](f: => A): Or[Exception, A] =
+    try {right(f)}
+    catch {
+      case e: Exception => left(e)
+    }
+
+  def left[A, B](a: A): Or[A, B] = Left(a)
+  def right[A, B](b: B): Or[A, B] = Right(b)
+}
+
 trait OrInstances {
   implicit def orInstances[A] = new Monad[Or[A, ?]] {
     override def flatMap[B, C](fa: Or[A, B])(f: B => Or[A, C]): Or[A, C] = fa flatMap f
